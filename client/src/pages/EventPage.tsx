@@ -17,7 +17,7 @@ export function EventPage() {
         description={`${DIWALI.when} · ${DIWALI.time} · ${DIWALI.venue}`}
         canonicalPath="/event"
       />
-      <section className="bg-wine text-paper">
+      <section className="bg-navy text-white">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
           <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-white/50">Published event</p>
           <h1 className="mt-3 max-w-3xl font-display text-4xl font-extrabold leading-tight sm:text-6xl">
@@ -33,19 +33,19 @@ export function EventPage() {
           {FACTS.map((fact) => (
             <div key={fact.label} className="border-t-2 border-brand-600 pt-4">
               <dt className="text-[11px] font-bold uppercase tracking-[0.22em] text-brand-600">{fact.label}</dt>
-              <dd className="mt-2 text-lg font-semibold text-wine">{fact.value}</dd>
+              <dd className="mt-2 text-lg font-semibold text-ink">{fact.value}</dd>
             </div>
           ))}
         </dl>
         <div className="mt-10 flex flex-wrap gap-3">
-          <a href={MAPS_URL} className="rounded-full border border-wine/20 px-5 py-3 text-sm font-bold text-wine">Get directions</a>
-          <a href={waLink('Hello Rising Talents, please share the complete event details for the Diwali Carnival Exhibition & Show.')} className="rounded-full border border-wine/20 px-5 py-3 text-sm font-bold text-wine">
+          <a href={MAPS_URL} className="rounded-full border border-white/20 px-5 py-3 text-sm font-bold text-ink">Get directions</a>
+          <a href={waLink('Hello Rising Talents, please share the complete event details for the Diwali Carnival Exhibition & Show.')} className="rounded-full border border-white/20 px-5 py-3 text-sm font-bold text-ink">
             Ask on WhatsApp {WHATSAPP_DISPLAY}
           </a>
           <Link to="/book" className="mark-fill rounded-full px-5 py-3 text-sm font-bold text-white">Book from this bill</Link>
         </div>
-        <aside className="mt-12 border border-dashed border-wine/20 p-5 text-sm text-ink-soft">
-          <p className="font-bold text-wine">Also listed</p>
+        <aside className="mt-12 border border-dashed border-white/20 p-5 text-sm text-ink-soft">
+          <p className="font-bold text-ink">Also listed</p>
           <p className="mt-2">
             {NEXT_LISTING.name}: {NEXT_LISTING.when}, {NEXT_LISTING.venue}. {NEXT_LISTING.source}
           </p>

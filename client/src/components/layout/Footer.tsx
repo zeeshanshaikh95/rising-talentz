@@ -4,14 +4,14 @@ import { DIWALI, INSTAGRAM_HANDLE, INSTAGRAM_URL, MAPS_URL, MOTTO, WHATSAPP_DISP
 
 export function Footer() {
   return (
-    <footer className="border-t border-wine/10 bg-paper text-wine">
+    <footer className="border-t border-ink/10 bg-white text-ink">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
           <img src={LOGO_ORIGINAL} alt="Rising Talents" className="h-20 w-auto" />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-ink-soft">
             {DIWALI.name}. {DIWALI.when}. {DIWALI.venue}.
           </p>
-          <p className="mt-3 font-script text-2xl text-brand-600">“{MOTTO}”</p>
+          <p className="mt-3 font-script text-3xl text-brand-600">“{MOTTO}”</p>
         </div>
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-brand-600">Desk</p>

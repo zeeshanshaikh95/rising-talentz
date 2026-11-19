@@ -65,7 +65,7 @@
   }
 
   .card {
-    @apply rounded-none bg-white shadow-card;
+    @apply rounded-blob bg-white shadow-card;
   }
 
   .section-title {
