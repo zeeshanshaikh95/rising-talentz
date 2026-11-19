@@ -31,7 +31,7 @@ export const HERO_IMAGE = `${BASE}brand/rising-talentz-logo-transparent.png`;
 export const FOUNDER_IMAGE = `${BASE}brand/rising-talentz-logo-transparent.png`;
 
 /** Social sharing image (1200×630). */
-export const OG_IMAGE = `${BASE}og-image.png`;
+export const OG_IMAGE = `${BASE}og-rising-talents.png`;
 
 /** Absolute URL of the social image, as crawlers require. */
 export const SITE_URL = import.meta.env.VITE_PUBLIC_SITE_URL ?? 'http://localhost:5173';
