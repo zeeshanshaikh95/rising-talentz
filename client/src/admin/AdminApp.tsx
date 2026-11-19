@@ -9,6 +9,7 @@ import { AdminProductFormPage } from './AdminProductFormPage';
 import { AdminCategoriesPage } from './AdminCategoriesPage';
 import { AdminReviewsPage } from './AdminReviewsPage';
 import { AdminGalleryPage } from './AdminGalleryPage';
+import { AdminBookingsPage } from './AdminBookingsPage';
 import { AdminSettingsPage } from './AdminSettingsPage';
 
 /** Guards every /admin route — the backend enforces auth independently. */
@@ -45,6 +46,7 @@ export default function AdminApp() {
                   <Route path="categories" element={<AdminCategoriesPage />} />
                   <Route path="reviews" element={<AdminReviewsPage />} />
                   <Route path="gallery" element={<AdminGalleryPage />} />
+                  <Route path="bookings" element={<AdminBookingsPage />} />
                   <Route path="settings" element={<AdminSettingsPage />} />
                   <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
                 </Routes>

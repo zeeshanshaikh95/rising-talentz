@@ -1,89 +1,45 @@
-import { publicApi } from '@/api/endpoints';
-import { useApi } from '@/hooks/useApi';
-import { useSettings } from '@/context/SettingsContext';
-import { EmptyState } from '@/components/EmptyState';
 import { Seo } from '@/components/seo/Seo';
-import { FloralDivider } from '@/components/FloralDivider';
-import { PlaceholderImage } from '@/components/PlaceholderImage';
+import { useApi } from '@/hooks/useApi';
+import { publicApi } from '@/api/endpoints';
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from '@/lib/event';
 
 export function GalleryPage() {
-  const { data, loading, error, refetch } = useApi(
-    () => publicApi.listGallery().then((r) => r.items),
-    []
-  );
-  const { settings } = useSettings();
+  const gallery = useApi(() => publicApi.listGallery().then((r) => r.items), []);
+  const photos = (gallery.data ?? []).filter((item) => item.image);
 
   return (
     <>
       <Seo
-        title="Instagram Gallery"
-        description="A curated selection of Rising Talentz moments from Instagram."
+        title="Gallery"
+        description="Photos from Rising Talents, added by the team. Follow the Instagram for the live feed."
         canonicalPath="/gallery"
       />
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+        <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-brand-600">Gallery</p>
+        <h1 className="mt-2 font-display text-4xl font-extrabold text-wine">From the floor</h1>
+        <p className="mt-3 max-w-xl text-sm text-ink-soft">
+          Only photos the team uploads in admin appear here. The previous site’s stock frames are not reused.
+        </p>
 
-      <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
-        <header className="text-center">
-          <p className="eyebrow">On Instagram</p>
-          <h1 className="section-title mt-2">Instagram Gallery</h1>
-          <p className="mx-auto mt-3 max-w-lg text-sm text-ink-soft">
-            A hand-picked selection from our Instagram — follow us for new products and behind the scenes.
-          </p>
-          <FloralDivider className="mt-4" />
-        </header>
-
-        {loading ? (
-          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {[...Array(6)].map((_, i) => <div key={i} className="skeleton aspect-square" />)}
-          </div>
-        ) : error ? (
-          <div className="mt-10">
-            <EmptyState icon="error" title="Couldn't load gallery" description={error} action={<button className="btn-outline" onClick={() => refetch()}>Try again</button>} />
-          </div>
-        ) : !data?.length ? (
-          <div className="mt-10">
-            <EmptyState
-              title="Instagram gallery coming soon"
-              description="We're curating our favourite posts — follow along on Instagram in the meantime."
-            />
+        {photos.length ? (
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {photos.map((item) => (
+              <figure key={item._id} className="bg-wine">
+                <img src={item.image} alt={item.caption || 'Rising Talents gallery'} className="aspect-[4/5] w-full object-cover" />
+                {item.caption ? <figcaption className="px-3 py-2 text-xs text-white/80">{item.caption}</figcaption> : null}
+              </figure>
+            ))}
           </div>
         ) : (
-          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {data.map((g) => {
-              const body = (
-                <>
-                  {g.image ? (
-                    <img src={g.image} alt={g.caption || 'Instagram post'} loading="lazy" className="h-full w-full object-cover transition-transform duration-300 hover:scale-105" />
-                  ) : (
-                    <PlaceholderImage seed={`ig-${g._id}`} />
-                  )}
-                  {g.caption ? (
-                    <p className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/70 to-transparent p-3 pt-8 text-xs font-medium text-white">
-                      {g.caption}
-                    </p>
-                  ) : null}
-                </>
-              );
-              return g.externalUrl ? (
-                <a key={g._id} href={g.externalUrl} target="_blank" rel="noopener noreferrer" className="group relative aspect-square overflow-hidden rounded-2xl bg-brand-50">
-                  {body}
-                </a>
-              ) : (
-                <div key={g._id} className="group relative aspect-square overflow-hidden rounded-2xl bg-brand-50">
-                  {body}
-                </div>
-              );
-            })}
+          <div className="mt-10 border border-dashed border-wine/20 p-8">
+            <p className="font-display text-2xl font-bold text-wine">No desk photos yet</p>
+            <p className="mt-2 text-sm text-ink-soft">
+              Follow {INSTAGRAM_HANDLE} for the current posts. Admin can add real event photos here when they have them.
+            </p>
+            <a href={INSTAGRAM_URL} className="mt-5 inline-flex text-sm font-bold text-brand-600">Open Instagram →</a>
           </div>
         )}
-
-        {settings.instagramUrl ? (
-          <div className="mt-10 text-center">
-            <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">
-              Follow on Instagram
-            </a>
-          </div>
-        ) : null}
-      </div>
+      </section>
     </>
   );
 }

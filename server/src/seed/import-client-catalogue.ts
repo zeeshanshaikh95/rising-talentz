@@ -79,6 +79,12 @@ function existingImages(files: string[]): string[] {
 }
 
 async function main(): Promise<void> {
+  console.log('[import] disabled: Rising Talents does not use the beauty catalogue importer.');
+  console.log('[import] booking offers are defined in client/src/lib/event.ts and saved via the public desk.');
+  return;
+}
+
+async function _disabled(): Promise<void> {
   await mongoose.connect(config.mongoUri);
   console.log(`[import] ${dryRun ? 'DRY RUN — no writes. ' : ''}DB: ${mongoose.connection.name}`);
 

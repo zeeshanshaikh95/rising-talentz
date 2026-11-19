@@ -4,70 +4,45 @@ export default {
     extend: {
       colors: {
         /**
-         * Brand palette derived from the client's official logo.
-         * The logo's own pink (#FFCFED) is brand-200, so tints, surfaces and
-         * floral accents match the logo exactly; brand-600 is the primary
-         * action colour (AA contrast with white text).
+         * Sampled from the Rising Talents mark: crimson wordmark,
+         * magenta-to-violet on the R. Paper is the logo's own white field.
          */
         brand: {
-          50: '#F5F3FF',
-          100: '#EDE9FE',
-          200: '#DDD6FE',
-          300: '#C4B5FD',
-          400: '#A78BFA',
-          500: '#8B5CF6',
-          600: '#6D28D9', // primary CTA
-          700: '#5B21B6',
-          800: '#4C1D95',
-          900: '#3B1876',
-          950: '#230F4A',
+          50: '#FFF5F7',
+          100: '#FFE4EA',
+          200: '#FECDD6',
+          300: '#FDA4B4',
+          400: '#F43F5E',
+          500: '#E1063A',
+          600: '#BE123C',
+          700: '#9F1239',
+          800: '#881337',
+          900: '#4C0519',
+          950: '#2A0610',
         },
-        // Neutral ink scale — near-black text for readability on white.
-        ink: '#141414',
-        'ink-soft': '#5C5C66',
-        // Primary background is white; blush is a whisper-soft pink tint used
-        // to alternate sections without introducing a second background colour.
-        cream: '#FFFFFF',
-        blush: '#FFF6FB',
-        // Botanical accent retained for herbal cues, kept muted and secondary.
-        leaf: {
-          50: '#F4F8F3',
-          100: '#E6EFE4',
-          500: '#6C8F6E',
-          600: '#557555',
-          700: '#415C42',
+        wine: {
+          DEFAULT: '#2A0614',
+          soft: '#4A1028',
+          mist: '#7A5564',
         },
+        paper: '#FFF8F7',
+        ink: '#2A0614',
+        'ink-soft': '#7A5564',
+        cream: '#FFF8F7',
+        blush: '#FFF1F3',
       },
       fontFamily: {
-        // Elegant display serif for headings, readable sans for body/UI.
-        display: ['"Playfair Display"', 'Georgia', 'serif'],
-        body: ['"Inter"', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+        display: ['Syne', 'system-ui', 'sans-serif'],
+        body: ['Manrope', 'system-ui', 'sans-serif'],
+        script: ['"Great Vibes"', 'cursive'],
       },
       boxShadow: {
-        soft: '0 6px 24px -8px rgba(204, 51, 116, 0.18)',
-        card: '0 2px 12px -2px rgba(20, 20, 20, 0.08)',
+        soft: '0 18px 40px -24px rgba(225, 6, 58, 0.45)',
+        card: '0 1px 0 rgba(42, 6, 20, 0.06), 0 16px 40px -28px rgba(42, 6, 20, 0.35)',
+        ticket: '0 24px 50px -28px rgba(42, 6, 20, 0.45)',
       },
-      borderRadius: {
-        blob: '1.75rem',
-      },
-      keyframes: {
-        'fade-up': {
-          '0%': { opacity: '0', transform: 'translateY(12px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-        'fade-in': {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
-        },
-        'slide-in-right': {
-          '0%': { transform: 'translateX(100%)' },
-          '100%': { transform: 'translateX(0)' },
-        },
-      },
-      animation: {
-        'fade-up': 'fade-up 0.5s ease-out both',
-        'fade-in': 'fade-in 0.4s ease-out both',
-        'slide-in-right': 'slide-in-right 0.28s ease-out both',
+      backgroundImage: {
+        mark: 'linear-gradient(105deg, #E1063A 0%, #C2185B 42%, #7B2CBF 100%)',
       },
     },
   },

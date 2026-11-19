@@ -9,6 +9,7 @@ const NAV = [
   { to: '/admin/categories', label: 'Categories', icon: 'M4 6h16M4 12h16M4 18h10' },
   { to: '/admin/reviews', label: 'Reviews', icon: 'M12 3l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8L6.6 19.6l1-6L3.3 9.4l6-.9L12 3z' },
   { to: '/admin/gallery', label: 'Gallery', icon: 'M4 6h16v12H4V6zm2 10l4-5 3 3 3-4 4 6H6z' },
+  { to: '/admin/bookings', label: 'Bookings', icon: 'M4 5h16v14H4V5zm3 4h10M7 13h10M7 17h6' },
   { to: '/admin/settings', label: 'Settings', icon: 'M12 8a4 4 0 100 8 4 4 0 000-8zm8 4l2 1-2 3-2-.6a7 7 0 01-1.5 1L16 19h-4l-.5-2.6a7 7 0 01-1.5-1L8 16l-2-3 2-1v-.1L6 11l2-3 2 .6a7 7 0 011.5-1L12 5h4l.5 2.6a7 7 0 011.5 1L20 8l2 3-2 1z' },
 ];
 

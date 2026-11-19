@@ -215,6 +215,45 @@ export const adminApi = {
       .then((r) => ({ settings: { ...normSettings(r.settings), updatedAt: r.settings.updatedAt } })),
   updateSettings: (input: AdminSettings) =>
     api.put<{ settings: AdminSettings }>('/admin/settings', input),
+
+  listBookings: () => api.get<{ bookings: BookingRecord[] }>('/admin/bookings'),
+  updateBooking: (id: string, status: BookingRecord['status']) =>
+    api.put<{ booking: BookingRecord }>(`/admin/bookings/${id}`, { status }),
+  deleteBooking: (id: string) => api.delete(`/admin/bookings/${id}`),
+};
+
+export interface BookingRecord {
+  _id: string;
+  reference: string;
+  offeringId: string;
+  eventId: string;
+  name: string;
+  phone: string;
+  city: string;
+  organisation: string;
+  quantity: number;
+  note: string;
+  status: 'new' | 'contacted' | 'confirmed' | 'closed';
+  createdAt: string;
+}
+
+export const bookingApi = {
+  create: (input: {
+    offeringId: string;
+    eventId: string;
+    name: string;
+    phone: string;
+    city: string;
+    organisation: string;
+    quantity: number;
+    note: string;
+  }) =>
+    api.post<{
+      booking: {
+        reference: string;
+        saved: boolean;
+      };
+    }>('/bookings', input),
 };
 
 export type { AdminSettings, AnalyticsSummary, Category, GalleryItem, Product, Review };

@@ -1,66 +1,35 @@
-import { useSettings } from '@/context/SettingsContext';
-import { Seo } from '@/components/seo/Seo';
-import { FloralDivider } from '@/components/FloralDivider';
 import { Link } from 'react-router-dom';
-import { FOUNDER_IMAGE } from '@/lib/brand';
+import { Seo } from '@/components/seo/Seo';
+import { LOGO_ORIGINAL } from '@/lib/brand';
+import { ABOUT, DIWALI, INSTAGRAM_HANDLE, INSTAGRAM_URL, YOUTUBE_URL } from '@/lib/event';
 
 export function AboutPage() {
-  const { settings } = useSettings();
-
   return (
     <>
       <Seo
-        title="About Rising Talentz"
-        description="The story behind Rising Talentz — handcrafted natural and herbal beauty products."
+        title="About Rising Talents"
+        description={ABOUT.lead}
         canonicalPath="/about"
       />
-
-      <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
-        <header className="text-center">
-          <p className="eyebrow">Our Story</p>
-          <h1 className="section-title mt-2">About Rising Talentz</h1>
-          <FloralDivider className="mt-4" />
-        </header>
-
-        <div className="mx-auto mt-10 aspect-[4/5] w-full max-w-[360px] overflow-hidden rounded-[24px] bg-brand-50 shadow-card">
-          <img
-            src={settings.about.founderImageUrl || FOUNDER_IMAGE}
-            alt="Parveen, founder of Rising Talentz"
-            width={1122}
-            height={1402}
-            decoding="async"
-            className="h-full w-full object-cover object-[50%_28%]"
-          />
+      <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 md:grid-cols-2">
+        <div className="bg-white p-8 shadow-card">
+          <img src={LOGO_ORIGINAL} alt="Rising Talents — we create future star" className="mx-auto h-auto w-full max-w-sm" />
         </div>
-
-        <div className="prose-pink mt-10 space-y-5 text-center">
-          <p className="mx-auto max-w-2xl text-lg leading-relaxed text-ink">
-            {settings.about.intro ||
-              'Rising Talentz is a natural/herbal beauty brand offering handcrafted, small-batch personal care products.'}
+        <div>
+          <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-brand-600">{ABOUT.since}</p>
+          <h1 className="mt-2 font-display text-4xl font-extrabold text-wine sm:text-5xl">Rising Talents</h1>
+          <p className="mt-5 text-base leading-relaxed text-ink-soft">{ABOUT.lead}</p>
+          <p className="mt-3 text-base leading-relaxed text-ink-soft">{ABOUT.mottoLine}</p>
+          <p className="mt-3 text-base leading-relaxed text-ink-soft">
+            The {DIWALI.name} brings exhibitors, sponsors and performers together on {DIWALI.when} at {DIWALI.venue}.
           </p>
-
-          {settings.about.story && settings.about.story !== '[CLIENT DATA REQUIRED]' ? (
-            <p className="mx-auto max-w-2xl whitespace-pre-line leading-relaxed text-ink-soft">
-              {settings.about.story}
-            </p>
-          ) : (
-            <div className="mx-auto max-w-2xl rounded-blob border-2 border-dashed border-brand-200 bg-white/70 p-6">
-              <p className="text-sm font-semibold uppercase tracking-wide text-brand-700">
-                [CLIENT DATA REQUIRED]
-              </p>
-              <p className="mt-2 text-sm text-ink-soft">
-                The full brand story will be added here once approved copy is provided — no
-                claims are invented.
-              </p>
-            </div>
-          )}
+          <div className="mt-6 flex flex-wrap gap-4 text-sm font-bold">
+            <a href={INSTAGRAM_URL} className="text-brand-600">{INSTAGRAM_HANDLE}</a>
+            <a href={YOUTUBE_URL} className="text-brand-600">YouTube</a>
+            <Link to="/book" className="text-wine">Book →</Link>
+          </div>
         </div>
-
-        <div className="mt-12 flex justify-center gap-3">
-          <Link to="/shop" className="btn-primary">Shop Products</Link>
-          <Link to="/contact" className="btn-outline">Contact Us</Link>
-        </div>
-      </div>
+      </section>
     </>
   );
 }

@@ -10,7 +10,8 @@ import {
   listReviews,
   recordAnalyticsEvent,
 } from '../controllers/publicController.js';
-import { analyticsLimiter } from '../middleware/rateLimiters.js';
+import { analyticsLimiter, bookingLimiter } from '../middleware/rateLimiters.js';
+import { createBooking } from '../controllers/bookingController.js';
 
 const router = Router();
 
@@ -26,5 +27,6 @@ router.get('/gallery', listGallery);
 router.get('/settings', getPublicSettings);
 
 router.post('/analytics/events', analyticsLimiter, recordAnalyticsEvent);
+router.post('/bookings', bookingLimiter, createBooking);
 
 export default router;

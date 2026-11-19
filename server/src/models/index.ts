@@ -10,6 +10,9 @@ export type { IReview, ReviewStatus } from './review.model.js';
 export { AdminUser } from './adminUser.model.js';
 export type { IAdminUser } from './adminUser.model.js';
 
+export { Booking } from './booking.model.js';
+export type { IBooking, BookingStatus, BookingOffering, BookingEvent } from './booking.model.js';
+
 export { GalleryItem } from './galleryItem.model.js';
 export type { IGalleryItem } from './galleryItem.model.js';
 

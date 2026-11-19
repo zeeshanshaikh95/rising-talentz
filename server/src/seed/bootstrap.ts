@@ -57,12 +57,23 @@ export async function bootstrapSettings(): Promise<void> {
   await SiteSettings.create({
     businessName: 'Rising Talentz',
     // Business contact details and brand copy are supplied by the client.
-    whatsappNumber: '',
-    instagramUrl: '',
+    whatsappNumber: '+918454922897',
+    instagramUrl: 'https://www.instagram.com/rising_talentz_/',
     email: '',
-    mapsUrl: '',
-    hero: { headline: '', subheadline: '', imageUrl: '' },
-    about: { intro: '', story: CLIENT_DATA_REQUIRED, founderImageUrl: '' },
+    mapsUrl:
+      'https://www.google.com/maps/search/?api=1&query=Rassaz%20Ground%20Near%20Rassaz%20Mall%20Mira%20Road%20East%20Thane%20Maharashtra%20401107',
+    hero: {
+      headline: 'Diwali Carnival Exhibition & Show',
+      subheadline:
+        'A festive celebration of talent, craft and enterprise at Rassaz Ground, Near Rassaz Mall, Mira Road East.',
+      imageUrl: '',
+    },
+    about: {
+      intro:
+        'Rising Talents creates platforms where new talent and growing brands can be seen. Our motto — “we create future star” — guides every stage, stall and showcase we build.',
+      story: CLIENT_DATA_REQUIRED,
+      founderImageUrl: '',
+    },
     announcements: { enabled: false, text: '' },
   });
   console.log('✓ Site settings created (contact details pending client data)');

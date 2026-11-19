@@ -56,6 +56,11 @@ import {
   getAdminSettings,
   updateAdminSettings,
 } from '../controllers/adminSettingsController.js';
+import {
+  deleteBooking,
+  listAdminBookings,
+  updateBookingStatus,
+} from '../controllers/bookingController.js';
 
 const router = Router();
 
@@ -196,6 +201,11 @@ router.delete(
     res.json({ ok: true, url: result.url, released: result.released, reason: result.reason });
   })
 );
+
+// ── Bookings ────────────────────────────────────────────────────
+router.get('/bookings', listAdminBookings);
+router.put('/bookings/:id', updateBookingStatus);
+router.delete('/bookings/:id', deleteBooking);
 
 // ── Analytics ───────────────────────────────────────────────────
 router.get('/analytics', getAnalytics);

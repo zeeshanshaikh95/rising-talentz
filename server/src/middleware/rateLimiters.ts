@@ -29,6 +29,15 @@ export const analyticsLimiter = rateLimit({
   message: { error: 'Too many analytics events' },
 });
 
+/** Public booking desk — unauthenticated, so keep it tight. */
+export const bookingLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 8,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  message: { error: 'Too many booking attempts. Send the ticket on WhatsApp, or try again shortly.' },
+});
+
 /** Uploads are admin-only but still bounded. */
 export const uploadLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,

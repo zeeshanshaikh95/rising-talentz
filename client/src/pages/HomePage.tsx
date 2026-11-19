@@ -1,354 +1,160 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { publicApi } from '@/api/endpoints';
-import { useApi } from '@/hooks/useApi';
-import { useSettings } from '@/context/SettingsContext';
-import { ProductCard } from '@/components/ProductCard';
-import { PlaceholderImage } from '@/components/PlaceholderImage';
-import { FloralDivider } from '@/components/FloralDivider';
-import { Stars } from '@/components/Stars';
 import { Seo } from '@/components/seo/Seo';
-import { EmptyState } from '@/components/EmptyState';
-import { WhatsAppButton } from '@/components/WhatsAppButton';
-import { trackEvent } from '@/lib/analytics';
-import { truncate } from '@/lib/format';
-import { HERO_IMAGE } from '@/lib/brand';
+import { LOGO_TRANSPARENT } from '@/lib/brand';
+import {
+  ABOUT,
+  DESK_OFFERINGS,
+  DIWALI,
+  INSTAGRAM_HANDLE,
+  LANES,
+  MOTTO,
+  NEXT_LISTING,
+  WHATSAPP_DISPLAY,
+} from '@/lib/event';
 
 export function HomePage() {
-  const { settings } = useSettings();
-  const categories = useApi(() => publicApi.listCategories().then((r) => r.categories), []);
-  const bestsellers = useApi(
-    () => publicApi.listProducts({ sort: 'bestseller' }).then((r) => r.products.filter((p) => p.bestseller)),
-    []
-  );
-  const featured = useApi(
-    () => publicApi.listProducts({ sort: 'featured' }).then((r) => r.products.filter((p) => p.featured)),
-    []
-  );
-  const reviews = useApi(() => publicApi.listReviews().then((r) => r.reviews), []);
-  const gallery = useApi(() => publicApi.listGallery().then((r) => r.items), []);
-
-  useEffect(() => {
-    trackEvent({ type: 'page_view', path: '/' });
-  }, []);
-
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: settings.businessName,
-    ...(settings.instagramUrl ? { sameAs: [settings.instagramUrl] } : {}),
-  };
-
   return (
     <>
       <Seo
-        title="Rising Talentz — We Create Future Star"
-        description="Book exhibition stalls, sponsorships, participation and more for the Rising Talents Diwali Carnival Exhibition & Show. Enquire on WhatsApp."
+        title="Rising Talents — Diwali Carnival Exhibition & Show"
+        description={`${DIWALI.name}. ${DIWALI.when}, ${DIWALI.time}, ${DIWALI.venue}. Book a stall, sponsorship or stage entry on WhatsApp ${WHATSAPP_DISPLAY}.`}
         canonicalPath="/"
-        jsonLd={jsonLd}
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'Event',
+          name: DIWALI.name,
+          startDate: '2026-10-24T16:00:00+05:30',
+          endDate: '2026-10-25T23:00:00+05:30',
+          eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+          eventStatus: 'https://schema.org/EventScheduled',
+          location: {
+            '@type': 'Place',
+            name: 'Rassaz Ground',
+            address: DIWALI.venue,
+          },
+          organizer: {
+            '@type': 'Organization',
+            name: 'Rising Talents',
+            slogan: MOTTO,
+          },
+        }}
       />
 
-      {/* ── Hero ──────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-blush to-cream">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-brand-100/70 blur-2xl" />
-        <div className="pointer-events-none absolute -left-20 bottom-0 h-56 w-56 rounded-full bg-leaf-50 blur-2xl" />
-
-        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
-          <div className="grid items-center gap-10 md:grid-cols-2">
-            <div className="animate-fade-up">
-              <p className="eyebrow">Natural · Herbal · Handcrafted</p>
-              <h1 className="mt-3 font-display text-4xl font-bold leading-tight text-ink sm:text-5xl">
-                {settings.hero.headline || 'Natural herbal beauty, handcrafted with care'}
-              </h1>
-              <p className="mt-4 max-w-lg text-base leading-relaxed text-ink-soft sm:text-lg">
-                {settings.hero.subheadline ||
-                  'Discover handcrafted, natural skincare made in small batches. Explore our products and order directly on WhatsApp.'}
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link to="/shop" className="btn-primary">
-                  Shop Products
-                </Link>
-                <WhatsAppButton
-                  message="Hi Rising Talentz! 🌸 I would like to enquire about your products."
-                  label="Order / Enquire on WhatsApp"
-                />
-              </div>
-              <p className="mt-4 text-xs text-ink-soft/80">
-                Personalised service on WhatsApp — we reply with availability & delivery details.
-              </p>
-            </div>
-
-            <div className="relative aspect-[4/5] overflow-hidden rounded-blob bg-blush shadow-soft">
-              <img
-                src={settings.hero.imageUrl || HERO_IMAGE}
-                alt="Rising Talentz handcrafted skincare — creams, serums and herbal oils styled with fresh roses"
-                width={1122}
-                height={1402}
-                loading="eager"
-                className="h-full w-full object-cover object-center"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Shop by Category ──────────────────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6" aria-labelledby="categories-heading">
-        <div className="text-center">
-          <p className="eyebrow">Browse</p>
-          <h2 id="categories-heading" className="section-title mt-2">Shop by Category</h2>
-          <FloralDivider className="mt-4" />
-        </div>
-
-        {categories.loading ? (
-          <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
-            {[...Array(3)].map((_, i) => <div key={i} className="skeleton h-44" />)}
-          </div>
-        ) : categories.error ? (
-          <div className="mt-8"><EmptyState icon="error" title="Couldn't load categories" description={categories.error} action={<button className="btn-outline" onClick={() => categories.refetch()}>Try again</button>} /></div>
-        ) : !categories.data?.length ? (
-          <div className="mt-8">
-            <EmptyState
-              title="Our categories are on the way"
-              description="We're preparing the collection. Follow us on Instagram or message us on WhatsApp to hear when it launches."
-            />
-          </div>
-        ) : (
-          <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
-            {categories.data.map((cat) => (
-              <Link
-                key={cat._id}
-                to={`/category/${cat.slug}`}
-                className="card group relative overflow-hidden"
-              >
-                <div className="aspect-[4/3] overflow-hidden bg-brand-50">
-                  {cat.image ? (
-                    <img
-                      src={cat.image}
-                      alt={cat.name}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  ) : (
-                    <PlaceholderImage seed={cat.slug} />
-                  )}
-                </div>
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/70 to-transparent p-4 pt-10">
-                  <h3 className="font-display text-lg font-semibold text-white">{truncate(cat.name, 40)}</h3>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-      </section>
-
-      {/* ── Bestsellers ───────────────────────────────────────── */}
-      <section className="bg-blush/50 py-14" aria-labelledby="bestsellers-heading">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="text-center">
-            <p className="eyebrow">Loved by our customers</p>
-            <h2 id="bestsellers-heading" className="section-title mt-2">Bestsellers</h2>
-            <FloralDivider className="mt-4" />
-          </div>
-
-          {bestsellers.loading ? (
-            <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-              {[...Array(4)].map((_, i) => <div key={i} className="skeleton h-72" />)}
-            </div>
-          ) : bestsellers.error ? (
-            <div className="mt-8"><EmptyState icon="error" title="Couldn't load products" description={bestsellers.error} /></div>
-          ) : !bestsellers.data?.length ? (
-            <div className="mt-8">
-              <EmptyState
-                title="No products available yet"
-                description="Our products will appear here as soon as the catalogue is ready."
-              />
-            </div>
-          ) : (
-            <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-              {bestsellers.data.slice(0, 8).map((p) => <ProductCard key={p._id} product={p} />)}
-            </div>
-          )}
-
-          <div className="mt-8 text-center">
-            <Link to="/shop" className="btn-outline">View All Products</Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Featured Products ─────────────────────────────────── */}
-      {featured.data?.length ? (
-        <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6" aria-labelledby="featured-heading">
-          <div className="text-center">
-            <p className="eyebrow">Special picks</p>
-            <h2 id="featured-heading" className="section-title mt-2">Featured Products</h2>
-            <FloralDivider className="mt-4" />
-          </div>
-          <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-            {featured.data.slice(0, 4).map((p) => <ProductCard key={p._id} product={p} />)}
-          </div>
-        </section>
-      ) : null}
-
-      {/* ── Why Rising Talentz ────────────────────────────────── */}
-      <section className="bg-white py-14" aria-labelledby="why-heading">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="text-center">
-            <p className="eyebrow">Our promise</p>
-            <h2 id="why-heading" className="section-title mt-2">Why Rising Talentz</h2>
-            <FloralDivider className="mt-4" />
-          </div>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              { title: 'Natural & Herbal', text: 'Formulated with natural and herbal ingredients, prepared with care.' },
-              { title: 'Handcrafted in Small Batches', text: 'Each batch is made by hand in limited quantities for freshness.' },
-              { title: 'Personal WhatsApp Service', text: 'Direct, personal guidance before you order — straight from the maker.' },
-            ].map((item) => (
-              <div key={item.title} className="card p-6 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand-100 text-brand-600">
-                  <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8">
-                    <path d="M12 21c-5-3-8-6.5-8-10a5 5 0 018-4 5 5 0 018 4c0 3.5-3 7-8 10z" strokeLinecap="round" />
-                  </svg>
-                </div>
-                <h3 className="mt-4 font-display text-lg font-semibold">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-ink-soft">{item.text}</p>
-              </div>
-            ))}
-          </div>
-          {/* NOTE: only neutral, non-medical wording is used above. Replace with the
-              client's approved benefit copy once supplied (PRD §7.6). */}
-        </div>
-      </section>
-
-      {/* ── About teaser ──────────────────────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6" aria-labelledby="about-heading">
-        <div className="grid items-center gap-10 md:grid-cols-2">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-blob bg-brand-50 shadow-card md:aspect-[4/3]">
-            {settings.about.founderImageUrl ? (
-              <img src={settings.about.founderImageUrl} alt="Founder of Rising Talentz" className="h-full w-full object-cover" loading="lazy" />
-            ) : (
-              <PlaceholderImage seed="founder" />
-            )}
-          </div>
+      <section className="relative overflow-hidden bg-wine text-paper">
+        <div className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-brand-600/40 blur-3xl" />
+        <div className="pointer-events-none absolute -right-16 bottom-0 h-72 w-72 rounded-full bg-[#7B2CBF]/40 blur-3xl" />
+        <div className="relative mx-auto grid max-w-6xl items-end gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.3fr_0.7fr] lg:py-24">
           <div>
-            <p className="eyebrow">Our story</p>
-            <h2 id="about-heading" className="section-title mt-2">About Rising Talentz</h2>
-            <p className="mt-4 leading-relaxed text-ink-soft">
-              {settings.about.intro ||
-                'Rising Talentz is a natural/herbal beauty brand offering handcrafted, small-batch personal care products.'}
+            <p className="font-script text-3xl text-rose-200 sm:text-4xl">“{MOTTO}”</p>
+            <p className="mt-6 text-[11px] font-bold uppercase tracking-[0.32em] text-white/60">
+              {DIWALI.days} · Mira Road East
             </p>
-            <div className="mt-6">
-              <Link to="/about" className="btn-outline">Read Our Story</Link>
+            <h1 className="mt-3 max-w-xl font-display text-5xl font-extrabold leading-[0.92] sm:text-7xl">
+              Diwali
+              <span className="mark-text block">Carnival</span>
+              <span className="block text-3xl font-bold text-white/80 sm:text-4xl">Exhibition & Show</span>
+            </h1>
+            <p className="mt-6 max-w-lg text-base leading-relaxed text-white/75">
+              A festive celebration of talent, craft and enterprise at Rassaz Ground, Near Rassaz Mall, Mira Road East.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link to="/book?offer=stall" className="mark-fill rounded-full px-5 py-3 text-sm font-bold text-white">
+                Book a stall
+              </Link>
+              <Link to="/event" className="rounded-full border border-white/25 px-5 py-3 text-sm font-bold text-white">
+                Read the bill
+              </Link>
             </div>
           </div>
+
+          <aside className="relative bg-paper p-6 text-wine shadow-ticket">
+            <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-brand-600">Show bill</p>
+            <dl className="mt-5 space-y-4">
+              <div>
+                <dt className="text-[11px] font-bold uppercase tracking-widest text-ink-soft">Dates</dt>
+                <dd className="font-display text-2xl font-bold">{DIWALI.when}</dd>
+              </div>
+              <div>
+                <dt className="text-[11px] font-bold uppercase tracking-widest text-ink-soft">Timing</dt>
+                <dd className="text-lg font-semibold">{DIWALI.time}</dd>
+              </div>
+              <div>
+                <dt className="text-[11px] font-bold uppercase tracking-widest text-ink-soft">Venue</dt>
+                <dd className="text-sm leading-relaxed">{DIWALI.venue}</dd>
+              </div>
+            </dl>
+            <p className="mt-6 border-t border-dashed border-wine/20 pt-4 text-xs text-ink-soft">
+              Next listing on {INSTAGRAM_HANDLE}: {NEXT_LISTING.when}, {NEXT_LISTING.venue}. Year not stated on the profile.
+            </p>
+          </aside>
         </div>
       </section>
 
-      {/* ── Reviews ───────────────────────────────────────────── */}
-      <section className="bg-blush/50 py-14" aria-labelledby="reviews-heading">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="text-center">
-            <p className="eyebrow">Customer love</p>
-            <h2 id="reviews-heading" className="section-title mt-2">Reviews & Results</h2>
-            <FloralDivider className="mt-4" />
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-brand-600">The desk</p>
+            <h2 className="mt-2 font-display text-4xl font-extrabold text-wine">What you can book</h2>
           </div>
-
-          {reviews.loading ? (
-            <div className="mt-8 grid gap-4 md:grid-cols-3">{[...Array(3)].map((_, i) => <div key={i} className="skeleton h-40" />)}</div>
-          ) : !reviews.data?.length ? (
-            <div className="mt-8">
-              <EmptyState
-                title="No reviews yet"
-                description="Customer reviews will be shared here as soon as they're approved."
-              />
-            </div>
-          ) : (
-            <div className="mt-8 grid gap-4 md:grid-cols-3">
-              {reviews.data.slice(0, 6).map((r) => (
-                <figure key={r._id} className="card flex flex-col p-6">
-                  <Stars rating={r.rating} />
-                  <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-ink-soft">
-                    “{r.text}”
-                  </blockquote>
-                  <figcaption className="mt-4 text-sm font-semibold text-ink">— {r.customerName}</figcaption>
-                </figure>
-              ))}
-            </div>
-          )}
-          <div className="mt-8 text-center">
-            <Link to="/reviews" className="btn-outline">See All Reviews</Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Instagram gallery ─────────────────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6" aria-labelledby="gallery-heading">
-        <div className="text-center">
-          <p className="eyebrow">On Instagram</p>
-          <h2 id="gallery-heading" className="section-title mt-2">@rising_talentz_</h2>
-          <p className="mx-auto mt-2 max-w-md text-sm text-ink-soft">
-            A hand-picked selection from our Instagram — follow us for new products and behind the scenes.
+          <p className="max-w-sm text-sm text-ink-soft">
+            Prices are not published. The desk issues a reference, saves the request, and hands it to the team on WhatsApp {WHATSAPP_DISPLAY}.
           </p>
         </div>
-
-        {gallery.data?.length ? (
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-            {gallery.data.slice(0, 6).map((g) => {
-              const inner = (
-                <>
-                  {g.image ? (
-                    <img src={g.image} alt={g.caption || 'Instagram post'} loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
-                  ) : (
-                    <PlaceholderImage seed={`ig-${g._id}`} />
-                  )}
-                </>
-              );
-              return g.externalUrl ? (
-                <a key={g._id} href={g.externalUrl} target="_blank" rel="noopener noreferrer" className="group relative aspect-square overflow-hidden rounded-2xl bg-brand-50">
-                  {inner}
-                </a>
-              ) : (
-                <div key={g._id} className="group relative aspect-square overflow-hidden rounded-2xl bg-brand-50">
-                  {inner}
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="mt-8">
-            <EmptyState
-              title="Instagram gallery coming soon"
-              description="We're curating our favourite posts — follow along on Instagram in the meantime."
-            />
-          </div>
-        )}
-
-        {settings.instagramUrl ? (
-          <div className="mt-8 text-center">
-            <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer" className="btn-outline">
-              Follow on Instagram
-            </a>
-          </div>
-        ) : null}
+        <div className="mt-8 divide-y divide-wine/10 border-y border-wine/10">
+          {DESK_OFFERINGS.map((item) => (
+            <Link
+              key={item.id}
+              to={`/book?offer=${item.id}`}
+              className="group grid gap-2 py-5 sm:grid-cols-[180px_1fr_auto] sm:items-center"
+            >
+              <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-brand-600">{item.lane}</span>
+              <span>
+                <span className="font-display text-2xl font-bold text-wine group-hover:text-brand-600">{item.name}</span>
+                <span className="mt-1 block text-sm text-ink-soft">{item.detail}</span>
+              </span>
+              <span className="text-sm font-bold text-wine">Book →</span>
+            </Link>
+          ))}
+        </div>
       </section>
 
-      {/* ── Final WhatsApp CTA ────────────────────────────────── */}
-      <section className="bg-gradient-to-r from-brand-600 to-brand-500 py-16">
-        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
-          <h2 className="font-display text-3xl font-bold text-white sm:text-4xl">
-            Ready to glow?
-          </h2>
-          <p className="mx-auto mt-3 max-w-xl text-brand-50">
-            Message us on WhatsApp for personalised recommendations, availability and delivery details.
-          </p>
-          <div className="mt-8">
-            <WhatsAppButton
-              message="Hi Rising Talentz! 🌸 I would like to enquire about your products."
-              label="Chat on WhatsApp"
-              size="lg"
-              className="!bg-white !text-brand-700 hover:!bg-brand-50"
-            />
+      <section className="bg-blush">
+        <div className="mx-auto grid max-w-6xl gap-px bg-wine/10 px-4 py-16 sm:grid-cols-3 sm:px-6">
+          {LANES.map((lane) => (
+            <article key={lane.id} className="bg-blush p-6">
+              <p className="font-display text-5xl font-extrabold text-brand-600/30">{lane.index}</p>
+              <h3 className="mt-2 font-display text-2xl font-bold text-wine">{lane.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-ink-soft">{lane.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 md:grid-cols-2">
+        <img src={LOGO_TRANSPARENT} alt="" className="mx-auto h-56 w-auto bg-wine p-6" />
+        <div>
+          <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-brand-600">{ABOUT.since}</p>
+          <h2 className="mt-2 font-display text-4xl font-extrabold text-wine">Rising Talents</h2>
+          <p className="mt-4 text-base leading-relaxed text-ink-soft">{ABOUT.lead}</p>
+          <p className="mt-3 text-base leading-relaxed text-ink-soft">{ABOUT.mottoLine}</p>
+          <Link to="/about" className="mt-6 inline-flex text-sm font-bold text-brand-600">
+            The organisation →
+          </Link>
+        </div>
+      </section>
+
+      <section className="bg-wine text-paper">
+        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 px-4 py-14 sm:px-6 md:flex-row md:items-center">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-white/50">Awards</p>
+            <h2 className="mt-2 font-display text-3xl font-extrabold">Nominations are open</h2>
+            <p className="mt-3 max-w-xl text-sm text-white/70">
+              Categories and criteria are shared on request — they are not listed publicly.
+            </p>
           </div>
+          <Link to="/awards" className="rounded-full bg-paper px-5 py-3 text-sm font-bold text-wine">
+            Nominate
+          </Link>
         </div>
       </section>
     </>

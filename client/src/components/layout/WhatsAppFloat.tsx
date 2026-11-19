@@ -1,35 +1,18 @@
-import { useSettings } from '@/context/SettingsContext';
-import { useCart } from '@/context/CartContext';
-import { buildWhatsAppLink } from '@/lib/whatsapp';
+import { waLink, WHATSAPP_DISPLAY } from '@/lib/event';
 import { trackEvent } from '@/lib/analytics';
-import { WhatsAppGlyph } from '@/components/ProductCard';
 
-/**
- * Persistent floating WhatsApp CTA (PRD §15) — sits bottom-right, does not
- * obstruct content, hidden while the mini-cart is open.
- */
 export function WhatsAppFloat() {
-  const { settings, whatsappConfigured } = useSettings();
-  const { isOpen } = useCart();
-
-  if (!whatsappConfigured || isOpen) return null;
-
-  const link = buildWhatsAppLink(
-    settings,
-    'Hi Rising Talentz! 🌸 I have a question about your products.'
-  );
-  if (!link) return null;
-
   return (
     <a
-      href={link}
+      href={waLink('Hello Rising Talents, I visited the website and would like to talk to the team.')}
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => trackEvent({ type: 'whatsapp_click' })}
-      className="fixed bottom-5 right-5 z-[60] flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-soft transition-transform hover:scale-105 active:scale-95"
-      aria-label="Chat on WhatsApp"
+      className="fixed bottom-4 right-4 z-50 inline-flex items-center gap-2 rounded-full bg-[#128C7E] px-4 py-3 text-sm font-bold text-white shadow-ticket"
+      aria-label={`WhatsApp ${WHATSAPP_DISPLAY}`}
     >
-      <WhatsAppGlyph className="h-7 w-7" />
+      <span className="h-2 w-2 rounded-full bg-white" />
+      WhatsApp
     </a>
   );
 }

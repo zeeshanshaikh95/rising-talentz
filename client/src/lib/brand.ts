@@ -11,24 +11,24 @@ const BASE = import.meta.env.BASE_URL;
 export const LOGO_ORIGINAL = `${BASE}brand/rising-talentz-logo.png`;
 
 /** Background removed — for light surfaces (navbar, footer, admin). */
-export const LOGO_TRANSPARENT = `${BASE}brand/rising-talentz-logo.png`;
+export const LOGO_TRANSPARENT = `${BASE}brand/rising-talentz-logo-transparent.png`;
 
 /** Background removed + empty padding trimmed — best for small spaces. */
-export const LOGO_TRIMMED = `${BASE}brand/rising-talentz-logo.png`;
+export const LOGO_TRIMMED = `${BASE}brand/rising-talentz-logo-transparent.png`;
 
 /**
  * Homepage hero visual (1122×1402 — 4:5, matching the hero container exactly
  * so it fills without cropping). Client-supplied, so it ships from
  * client/public rather than the uploads folder.
  */
-export const HERO_IMAGE = `${BASE}images/hero-skincare.png`;
+export const HERO_IMAGE = `${BASE}brand/rising-talentz-logo-transparent.png`;
 
 /**
  * Founder portrait for the About page (1122×1402 — 4:5, matching the About
  * card so it fills without cropping the face). Client-supplied, so it ships
  * from client/public rather than the uploads folder.
  */
-export const FOUNDER_IMAGE = `${BASE}images/founder-parveen.png`;
+export const FOUNDER_IMAGE = `${BASE}brand/rising-talentz-logo-transparent.png`;
 
 /** Social sharing image (1200×630). */
 export const OG_IMAGE = `${BASE}og-image.png`;

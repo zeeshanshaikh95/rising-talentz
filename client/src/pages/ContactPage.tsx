@@ -1,97 +1,89 @@
-import { useSettings } from '@/context/SettingsContext';
+import { useState } from 'react';
 import { Seo } from '@/components/seo/Seo';
-import { FloralDivider } from '@/components/FloralDivider';
-import { WhatsAppButton } from '@/components/WhatsAppButton';
-import { WhatsAppGlyph } from '@/components/ProductCard';
+import { bookingApi } from '@/api/endpoints';
+import { DIWALI, INSTAGRAM_URL, MAPS_URL, WHATSAPP_DISPLAY, YOUTUBE_URL, defaultEventId, waLink } from '@/lib/event';
 
 export function ContactPage() {
-  const { settings, whatsappConfigured } = useSettings();
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [interest, setInterest] = useState('Exhibit');
+  const [message, setMessage] = useState('');
+  const [sent, setSent] = useState('');
+
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const offeringId = interest === 'Sponsor' ? 'sponsor' : interest === 'Participate' ? 'participant' : interest === 'Exhibit' ? 'stall' : 'enquiry';
+    const eventId = defaultEventId();
+    const note = message.trim();
+    const text = [
+      'Hello Rising Talents,',
+      '',
+      `I am interested in: ${interest}`,
+      `Name: ${name}`,
+      `Phone: ${phone}`,
+      note ? `Message: ${note}` : '',
+      '',
+      `Event on the site: ${DIWALI.name}, ${DIWALI.when}.`,
+      'Thank you.',
+    ].filter(Boolean).join('\n');
+
+    bookingApi.create({
+      offeringId,
+      eventId,
+      name: name.trim(),
+      phone: phone.trim(),
+      city: '',
+      organisation: '',
+      quantity: 1,
+      note: `${interest}. ${note}`,
+    }).catch(() => undefined);
+
+    setSent(text);
+    window.open(waLink(text), '_blank', 'noopener,noreferrer');
+  }
 
   return (
     <>
-      <Seo
-        title="Contact Us"
-        description="Reach Rising Talentz on WhatsApp for orders, questions and personalised recommendations."
-        canonicalPath="/contact"
-      />
-
-      <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-        <header className="text-center">
-          <p className="eyebrow">Get in touch</p>
-          <h1 className="section-title mt-2">Contact Rising Talentz</h1>
-          <FloralDivider className="mt-4" />
-          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-ink-soft">
-            The fastest way to reach us is WhatsApp — ask about products, availability, delivery
-            or get a personalised recommendation.
-          </p>
-        </header>
-
-        <div className="mt-10 space-y-4">
-          <div className="card flex flex-col items-center gap-4 p-8 text-center">
-            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366]/10 text-[#1EB855]">
-              <WhatsAppGlyph className="h-7 w-7" />
-            </span>
-            <h2 className="font-display text-xl font-semibold">WhatsApp</h2>
-            {whatsappConfigured ? (
-              <>
-                <p className="text-sm text-ink-soft">
-                  Message us directly — we'll reply with availability and delivery details.
-                </p>
-                <WhatsAppButton
-                  message="Hi Rising Talentz! 🌸 I have a question."
-                  label="Chat on WhatsApp"
-                  size="lg"
-                />
-              </>
-            ) : (
-              <p className="text-sm font-semibold uppercase tracking-wide text-ink-soft">
-                [CLIENT DATA REQUIRED] — WhatsApp number pending
-              </p>
-            )}
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="card p-6 text-center">
-              <h2 className="font-display text-lg font-semibold">Instagram</h2>
-              {settings.instagramUrl ? (
-                <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-sm font-semibold text-brand-700 hover:text-brand-800">
-                  Follow @glowbyparveen
-                </a>
-              ) : (
-                <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-ink-soft">
-                  [CLIENT DATA REQUIRED] — Instagram link
-                </p>
-              )}
-            </div>
-
-            <div className="card p-6 text-center">
-              <h2 className="font-display text-lg font-semibold">Email</h2>
-              {settings.email ? (
-                <a href={`mailto:${settings.email}`} className="mt-2 inline-block text-sm font-semibold text-brand-700 hover:text-brand-800">
-                  {settings.email}
-                </a>
-              ) : (
-                <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-ink-soft">
-                  [CLIENT DATA REQUIRED] — Email address
-                </p>
-              )}
-            </div>
-          </div>
-
-          {settings.mapsUrl ? (
-            <div className="card p-6 text-center">
-              <h2 className="font-display text-lg font-semibold">Find Us</h2>
-              <a href={settings.mapsUrl} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-sm font-semibold text-brand-700 hover:text-brand-800">
-                Open in Google Maps →
-              </a>
-            </div>
-          ) : null}
+      <Seo title="Talk to the team" description={`Every enquiry is handled on WhatsApp at ${WHATSAPP_DISPLAY}.`} canonicalPath="/contact" />
+      <section className="mx-auto grid max-w-6xl gap-12 px-4 py-16 sm:px-6 md:grid-cols-2">
+        <div>
+          <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-brand-600">Contact</p>
+          <h1 className="mt-2 font-display text-4xl font-extrabold text-wine">Talk to the team</h1>
+          <p className="mt-4 text-ink-soft">Every enquiry is handled on WhatsApp at {WHATSAPP_DISPLAY}.</p>
+          <ul className="mt-6 space-y-2 text-sm">
+            <li className="font-semibold">{DIWALI.venue}</li>
+            <li>{DIWALI.when} · {DIWALI.time}</li>
+            <li><a className="font-bold text-brand-600" href={MAPS_URL}>Get directions</a></li>
+            <li><a className="font-bold text-brand-600" href={INSTAGRAM_URL}>Instagram</a></li>
+            <li><a className="font-bold text-brand-600" href={YOUTUBE_URL}>YouTube</a></li>
+          </ul>
         </div>
-
-        <p className="mt-10 text-center text-xs leading-relaxed text-ink-soft/80">
-          Business hours, shipping timelines and policies: <span className="font-semibold">[CLIENT DATA REQUIRED]</span>
-        </p>
-      </div>
+        <form onSubmit={onSubmit} className="space-y-4 border border-wine/10 bg-white p-6">
+          <label className="block">
+            <span className="text-xs font-bold uppercase tracking-widest text-ink-soft">Name</span>
+            <input className="input mt-1" required value={name} onChange={(e) => setName(e.target.value)} />
+          </label>
+          <label className="block">
+            <span className="text-xs font-bold uppercase tracking-widest text-ink-soft">Phone</span>
+            <input className="input mt-1" required value={phone} onChange={(e) => setPhone(e.target.value)} inputMode="tel" />
+          </label>
+          <label className="block">
+            <span className="text-xs font-bold uppercase tracking-widest text-ink-soft">I am interested in</span>
+            <select className="input mt-1" value={interest} onChange={(e) => setInterest(e.target.value)}>
+              <option>Exhibit</option>
+              <option>Sponsor</option>
+              <option>Participate</option>
+              <option>Something else</option>
+            </select>
+          </label>
+          <label className="block">
+            <span className="text-xs font-bold uppercase tracking-widest text-ink-soft">Message</span>
+            <textarea className="input mt-1 min-h-28" value={message} onChange={(e) => setMessage(e.target.value)} />
+          </label>
+          <button type="submit" className="mark-fill w-full rounded-full py-3 text-sm font-bold text-white">Send on WhatsApp</button>
+          {sent ? <p className="text-xs text-ink-soft">WhatsApp should have opened with your message. If the desk API is online, a copy was saved too.</p> : null}
+        </form>
+      </section>
     </>
   );
 }
