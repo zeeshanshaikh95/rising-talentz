@@ -47,7 +47,7 @@ jobs:
           # (https://glowbyparveen.store/), so built asset URLs must be
           # root-relative. Using the old /<repo>/ project-site prefix here makes
           # every asset 404 and leaves a blank page.
-          VITE_BASE: /
+          VITE_BASE: /rising-talentz/
           # Repository variable holding the deployed API origin. No fallback on
           # purpose: a production bundle must never embed a localhost API URL.
           # If the variable is unset the client uses same-origin relative URLs,
